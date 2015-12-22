@@ -1,0 +1,9 @@
+Package: oconnell
+Type: Package
+Title: Implement the O'Connell-Dobson estimator for multi-rater agreement.
+Version: 1.0
+Date: 2015-12-20
+Author: Mark Clements
+Maintainer: Mark Clements <mark.clements@ki.se>
+Description: Implements an interface to the legacy Fortran code from O'Connell and Dobson (1984).
+License: Not for distribution.
