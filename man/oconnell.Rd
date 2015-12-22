@@ -94,10 +94,10 @@ observers are distinct}
 %}
 \examples{
 
-fit <- oconnell(landis, i=1)
-fit3 <- oconnell(landis, i=3)
 ## Table 1 (O'Connell and Dobson, 1984)
-summary(fit)
+summary(fit <- oconnell(landis, i=1))
+print(fit2 <- oconnell(landis, i=2))
+print(fit3 <- oconnell(landis, i=3))
 
 ## Table 3 (O'Connell and Dobson, 1984)
 slideTypeGroups <-
@@ -119,11 +119,18 @@ slideTypeGroups <-
          c(89,122),
          c(80,92,96,123),
          85)
-## table(fit$d)
-## tapply(names(fit$d),fit$d,I)
+%% ds <- transform(data.frame(id=rownames(landis),
+%%                            d1=oconnell(landis,i=1)$s2,
+%%                            d2=oconnell(landis,i=2)$s2
+%%                            d3=oconnell(landis,i=3)$s2),
+%%                 score=d1+d2+d3)
+%% ds <- ds[with(ds,order(-d1,d2)),]
+%% lapply(unique(ds$score), function(score) ds$id[ds$score==score])
 data.frame(SlideType=1:18,
-           S1=sapply(slideTypeGroups, function(ids) mean(fit$s1[as.character(ids)])),
-           S2=sapply(slideTypeGroups, function(ids) mean(fit$s2[as.character(ids)])))
+           S1=sapply(slideTypeGroups,
+                     function(ids) mean(fit$s1[as.character(ids)])),
+           S2=sapply(slideTypeGroups,
+                     function(ids) mean(fit$s2[as.character(ids)])))
 
 ## Table 5, O'Connell and Dobson (1984)
 oconnell(landis==1)

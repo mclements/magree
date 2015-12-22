@@ -1,0 +1,103 @@
+%\VignetteIndexEntry{O'Connell-Dobson estimators of agreement applied to data from Landis and Koch (1976)}
+%\VignetteDepends{oconnell}
+%\VignettePackage{oconnell}
+%!\SweaveUTF8
+
+\documentclass[nojss]{jss}
+
+\usepackage{amsmath,amsfonts,enumitem}
+\usepackage[utf8]{inputenc}
+
+\title{O'Connell-Dobson estimators of agreement applied to data from Landis and Koch (1976)}
+
+\author{Mark~Clements\\Karolinska Institutet}
+
+\Plainauthor{Mark~Clements}
+
+\Plaintitle{O'Connell-Dobson estimators of agreement}
+
+\Abstract{
+  
+  This vignette applies the O'Connell-Dobson estimators of agreement to a classical set of data on inter-rater agreement from Landis and Koch (1976). The analysis here follows the analysis given in O'Connell and Dobson (Biometrics 1984; 40: 973--983). We propose that the O'Connell-Dobson estimators are valuable and encourage their broader use.
+
+}
+
+\Keywords{agreement}
+
+\Plainkeywords{agreement}
+
+\Address{Mark~Clements\\
+  Department of Medical Epidemiology and Biostatistics\\
+  Karolinska Institutet\\
+  Email: \email{mark.clements@ki.se}
+  }
+
+\begin{document}
+
+O'Connell and Dobson (1984) provide a technical discussion on the statistical properties of averaged measures of agreement, particularly un-weighted and weighted kappa statistics that adjust for the probability of chance agreement. Such measures of agreement are common for studies of multi-rater agreement with nominal or ordinal variables. We have adapted the Fortran code from the 1984 paper for use in R. In the following, we apply the resulting package to the dataset analysed in the original paper. We propose that the O'Connell-Dobson estimators are valuable and encourage their broader use.
+
+Landis and Koch (Biometrics 1977; 33: 363--374) provide a dataset on inter-rater agreement by seven pathologists for classifying carcinoma in situ for uterine cancer. The data are included in the \pkg{oconnell} package as the \code{landis} data, which is a matrix.
+
+After loading the package, we can produce summary statistics for \code{i=1}, which is the un-weighted analysis, for the linear weights (\code{i=2}) or for quadratic weights (\code{i=3}). The summary statistics include marginal summaries and $\hat{S}_{av}$ for each slide.
+
+%<<fig=TRUE>>=
+<<>>=
+require(oconnell)
+## Table 1 (O'Connell and Dobson, 1984)
+summary(fit <- oconnell(landis, i=1))
+@ 
+
+A simple print of the object provides a short description of the estimator. This is shown here for the linear and quadratic weights.
+
+<<>>=
+require(oconnell)
+## Table 1 (O'Connell and Dobson, 1984), continued
+print(fit2 <- oconnell(landis, i=2))
+print(fit3 <- oconnell(landis, i=3))
+@ 
+
+Table 3 of O'Connell and Dobson (1984) includes an analysis where the slides are grouped by level of disagreement. We reproduce the table here.
+
+<<>>=
+slideTypeGroups <-
+    list(c(2,3,5,26,31,34,42,58,59,67,70,81,103,120),
+         c(7,10:13,17,23,30,41,51,55,56,60,65,71,73,76,86,87,105,111,116,119,124),
+         c(4,6,24,25,27,29,39,48,68,77,79,94,101,102,117),
+         c(9,32,36,44,52,62,84,95),
+         c(35,53,69,72),
+         c(8,15,18,19,47,64,82,93,98,99,107,110,112,115,121),
+         c(1,16,22,49,63,66,78,90,100,113),
+         c(28,37,40,61,108,114,118),
+         106,
+         43,
+         83,
+         c(54,57,88,91,126),
+         c(74,104),
+         38,
+         46,
+         c(89,122),
+         c(80,92,96,123),
+         85)
+@ 
+
+The average $\hat{S}_i$ in those groups can be readily calculated by:
+<<>>=
+data.frame(SlideType=1:18,
+           S1=sapply(slideTypeGroups, 
+               function(ids) mean(fit$s1[as.character(ids)])),
+           S2=sapply(slideTypeGroups, 
+               function(ids) mean(fit$s2[as.character(ids)])))
+@ 
+which follows part of Table 2. Finally, Table 5 from O'Connell and Dobson (1984) can be easily reproduced by dichotomising the outcomes:
+
+<<>>=
+oconnell(landis==1)
+oconnell(landis==2)
+oconnell(landis==3)
+oconnell(landis==4)
+oconnell(landis==5)
+@
+
+
+\end{document}
+

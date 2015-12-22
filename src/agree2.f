@@ -222,6 +222,7 @@ C  CALCULATE THE VARIANCES OF S(I) AND SAV
       S0SI22 = 0.
       DEL1 = 0.
       DEL2 = 0.
+c     Is the next statement now necessary?
       X = FLOAT(NSUBJ)
       DO 1110 J=1,NSUBJ
       SDJI1 = 0.
