@@ -2,13 +2,15 @@
 \alias{oconnell}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Implement the O'Connell-Dobson estimator for multirater agreement.
+O'Connell-Dobson estimator for multirater agreement.
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+  Use the O'Connell-Dobson estimator of agreement for nominal or ordinal
+  data. This includes a range of statistics on agreement for assuming
+  either distinct or homogeneous items. 
 }
 \usage{
-oconnell(X, score = NULL, i = 3)
+oconnell(X, score = NULL, weights=c("unweighted","linear","quadratic"), i=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,26 +21,41 @@ A matrix or data-frame with observations/subjects as rows and raters as columns.
     The scores that are to be assigned to the categories. Currently,
     this defaults to a sorted list of the unique values.
 }
+\item{weights}{
+  \describe{
+    \item{"unweighted"}{For nominal categories - only perfect agreement is counted.}
+    \item{"linear"}{For ordinal categories where disagreement is proportional to
+      the distance between the categories. This is analogous to the
+      agreement weights \eqn{w_{i,j}=1-|i-j|/(c-1)}.}
+    \item{"quadratic"}{For ordinal categories where disagreement is proportional to
+      the square of the distance between the categories. This is analogous
+      to the agreement weights \eqn{w_{i,j}=1-(i-j)^2/(c-1)^2}.}
+  }
+}
 \item{i}{
   \enumerate{
     \item{For nominal categories - only perfect agreement is counted.}
     \item{For ordinal categories where disagreement is proportional to
       the distance between the categories. This is analogous to the
       agreement weights \eqn{w_{i,j}=1-|i-j|/(c-1)}.}
-    \item{For ordinal categoreis where disagreement is proportional to
+    \item{For ordinal categories where disagreement is proportional to
       the square of the distance between the categories. This is analogous
       to the agreement weights \eqn{w_{i,j}=1-(i-j)^2/(c-1)^2}.}
   }
-  }
+  This argument takes precedence over \code{weights} if it is specified.
+}
 }
 \details{
-The Fortran code from Professor Dianne O'Connell was adapted for R. 
-
-Currently, the output object is very similar to the Fortan code.
+  The Fortran code from Professor Dianne O'Connell was adapted for R. 
+  
+  The output object is very similar to the Fortan code. Not
+  all of the variance terms are currently used in the \code{print} and \code{summary} methods.
 }
 \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
+\item{X}{As input}
+\item{i}{As input}
 \item{nrater}{Number of observers}
 \item{nscore}{Number of categories}
 \item{nsubj}{Number of subjects (items)}
@@ -67,14 +84,18 @@ observers are distinct}
 \item{var0s1}{Null variance of S when observers are distinct}
 \item{var0s2}{Null variance of S when observers are homogeneous}
 \item{vars1}{Unconstrained variance of S when observers are distinct}
-\item{vars1}{Unconstrained variance of S when observers are homogeneous}
+\item{vars2}{Unconstrained variance of S when observers are homogeneous}
 \item{v0sav1}{Null variance of Sav when observers are distinct}
 \item{v0sav2}{Null variance of Sav when observers are homogeneous}
 \item{vsav1}{Unconstrained variance of Sav when observers are distinct}
 \item{vsav2}{Unconstrained variance of Sav when observers are homogeneous}
-%%\item{resp[i,j]}{Response for observer i on subject j; transpose of X (BEWARE)}
-\item{X[j,i]}{Response for observer i on subject j}
+\item{p0sav1}{Probability of overall agreement due to chance when
+  observers are distinct}
+\item{p0sav2}{Probability of overall agreement due to chance when
+  observers are homogeneous}
+\item{resp[i,j]}{Response for observer i on subject j; transpose of X (BEWARE)}
 \item{score(i)}{Score associated with i'th category}
+\item{call}{As per \code{sys.call()}, to allow for using \code{update}}
 %% ...
 }
 %% \references{
@@ -95,9 +116,9 @@ observers are distinct}
 \examples{
 
 ## Table 1 (O'Connell and Dobson, 1984)
-summary(fit <- oconnell(landis, i=1))
-print(fit2 <- oconnell(landis, i=2))
-print(fit3 <- oconnell(landis, i=3))
+summary(fit <- oconnell(landis, weights="unweighted"))
+update(fit, weights="linear")
+update(fit, weights="quadratic")
 
 ## Table 3 (O'Connell and Dobson, 1984)
 slideTypeGroups <-
@@ -119,13 +140,6 @@ slideTypeGroups <-
          c(89,122),
          c(80,92,96,123),
          85)
-%% ds <- transform(data.frame(id=rownames(landis),
-%%                            d1=oconnell(landis,i=1)$s2,
-%%                            d2=oconnell(landis,i=2)$s2
-%%                            d3=oconnell(landis,i=3)$s2),
-%%                 score=d1+d2+d3)
-%% ds <- ds[with(ds,order(-d1,d2)),]
-%% lapply(unique(ds$score), function(score) ds$id[ds$score==score])
 data.frame(SlideType=1:18,
            S1=sapply(slideTypeGroups,
                      function(ids) mean(fit$s1[as.character(ids)])),
@@ -138,7 +152,18 @@ oconnell(landis==2)
 oconnell(landis==3)
 oconnell(landis==4)
 oconnell(landis==5)
+
+## Plot of the marginal distributions
+graphics:::plot.table(fit$p1, xlab="Pathologist", ylab="Marginal proportion", main="")
 }
+%% ds <- transform(data.frame(id=rownames(landis),
+%%                            d1=oconnell(landis,i=1)$s2,
+%%                            d2=oconnell(landis,i=2)$s2
+%%                            d3=oconnell(landis,i=3)$s2),
+%%                 score=d1+d2+d3)
+%% ds <- ds[with(ds,order(-d1,d2)),]
+%% lapply(unique(ds$score), function(score) ds$id[ds$score==score])
+%%
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 %\keyword{ ~kwd1 }

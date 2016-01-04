@@ -44,7 +44,7 @@ After loading the package, we can produce summary statistics for \code{i=1}, whi
 <<>>=
 require(oconnell)
 ## Table 1 (O'Connell and Dobson, 1984)
-summary(fit <- oconnell(landis, i=1))
+summary(fit <- oconnell(landis, weight="unweighted"))
 @ 
 
 A simple print of the object provides a short description of the estimator. This is shown here for the linear and quadratic weights.
@@ -52,8 +52,8 @@ A simple print of the object provides a short description of the estimator. This
 <<>>=
 require(oconnell)
 ## Table 1 (O'Connell and Dobson, 1984), continued
-print(fit2 <- oconnell(landis, i=2))
-print(fit3 <- oconnell(landis, i=3))
+print(update(fit, weight="linear"))
+print(update(fit, weight="quadratic"))
 @ 
 
 Table 3 of O'Connell and Dobson (1984) includes an analysis where the slides are grouped by level of disagreement. We reproduce the table here.
