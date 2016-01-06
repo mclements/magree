@@ -32,7 +32,7 @@ oconnell <- function(X,score=NULL, weights=c("unweighted","linear","quadratic"),
     out$p0sav1 <- 2*pnorm(abs(out$sav1/sqrt(out$v0sav1)-1),lower.tail=FALSE)
     out$p0sav2 <- 2*pnorm(abs(out$sav2/sqrt(out$v0sav2)-1),lower.tail=FALSE)
     out$X <- X
-    out$schouten <- schouten(X,weights)
+    ## out$schouten <- schouten(X,weights)
     out$call <- sys.call()
     class(out) <- "oconnell"
     out
@@ -81,11 +81,8 @@ print.summary.oconnell <- function(obj, ...) {
     print(obj$p1)
     cat("\nAgreement statistics S_i for the individual items:\n\n")
     print(obj$s1)
-    cat("\nAgreement statistics for each rater:\n\n")
-    su <- summary(obj$schouten)
-    ka <- cbind(Kappa=su$ka,`[Lower,`=su$cia[,1],`Upper]`=su$cia[,2],
-                `Pr(Different to average)`=su$pchi)
-    stats::printCoefmat(ka,eps.Pvalue=1e-5)
+    ## cat("\nAgreement statistics for each rater:\n\n")
+    ## .print.summary.schouten.ka(summary(obj$schouten))
     invisible(obj)
 }
 
@@ -97,5 +94,5 @@ plot.oconnell <- function(obj, type=c("p1","kappa by rater"), xlab=NULL, ylab=NU
         if (is.null(main)) main <- ""
         graphics:::plot.table(obj$p1, xlab=xlab, ylab=ylab, main=main, ...)
     }
-    if (type=="kappa by rater") plot.schouten(obj$schouten,xlab=xlab,ylab=ylab,main=main,...)
+    ## if (type=="kappa by rater") plot.schouten(obj$schouten,xlab=xlab,ylab=ylab,main=main,...)
 }

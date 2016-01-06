@@ -8,17 +8,17 @@
 \usepackage{amsmath,amsfonts,enumitem}
 \usepackage[utf8]{inputenc}
 
-\title{O'Connell-Dobson estimators of agreement applied to data from Landis and Koch (1976)}
+\title{O'Connell-Dobson-Schouten estimators of agreement applied to data from Landis and Koch (1976)}
 
 \author{Mark~Clements\\Karolinska Institutet}
 
 \Plainauthor{Mark~Clements}
 
-\Plaintitle{O'Connell-Dobson estimators of agreement}
+\Plaintitle{O'Connell-Dobson-Schouten estimators of agreement}
 
 \Abstract{
   
-  This vignette applies the O'Connell-Dobson estimators of agreement to a classical set of data on inter-rater agreement from Landis and Koch (1976). The analysis here follows the analysis given in O'Connell and Dobson (Biometrics 1984; 40: 973--983). We propose that the O'Connell-Dobson estimators are valuable and encourage their broader use.
+  This vignette applies the O'Connell-Dobson-Schouten estimators of agreement to a classical set of data on inter-rater agreement from Landis and Koch (1976). The analysis here follows the analysis given in O'Connell and Dobson (Biometrics 1984; 40: 973--983) and Schouten (Statistica Neerlandica 1982: 36: 45-61). We propose that the O'Connell-Dobson-Schouten estimators are valuable and encourage their broader use.
 
 }
 
@@ -34,7 +34,7 @@
 
 \begin{document}
 
-O'Connell and Dobson (1984) provide a technical discussion on the statistical properties of averaged measures of agreement, particularly un-weighted and weighted kappa statistics that adjust for the probability of chance agreement. Such measures of agreement are common for studies of multi-rater agreement with nominal or ordinal variables. We have adapted the Fortran code from the 1984 paper for use in R. In the following, we apply the resulting package to the dataset analysed in the original paper. We propose that the O'Connell-Dobson estimators are valuable and encourage their broader use.
+O'Connell and Dobson (1984) and Schouten (1982) provide a technical discussion on the statistical properties of averaged measures of agreement, particularly un-weighted and weighted kappa statistics that adjust for the probability of chance agreement. Such measures of agreement are common for studies of multi-rater agreement with nominal or ordinal variables. We have adapted the Fortran code from the 1984 paper by O'Connell and Dobson for use in R and implemented the algorithms described by Schouten (1982) in Fortran. In the following, we apply the resulting package to the dataset analysed in both articles. We propose that the O'Connell-Dobson-Schouten estimators are valuable and encourage their broader use.
 
 Landis and Koch (Biometrics 1977; 33: 363--374) provide a dataset on inter-rater agreement by seven pathologists for classifying carcinoma in situ for uterine cancer. The data are included in the \pkg{oconnell} package as the \code{landis} data, which is a matrix.
 
@@ -98,6 +98,11 @@ oconnell(landis==4)
 oconnell(landis==5)
 @
 
+We can also compare the raters using the results due to Schouten (1982). 
+<<>>=
+fit2 <- schouten(landis)
+summary(fit2)
+@ 
 
 \end{document}
 

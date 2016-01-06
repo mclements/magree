@@ -50,7 +50,8 @@ schouten <- function(X,weights=c("unweighted","linear","quadratic","user"),w=NUL
                     var0k=0.0,
                     wab=array(0.0,c(M,M)))
     out$pchi <- pchisq(out$chi,df=1,lower.tail=FALSE)
-    ## dimnames(out$pab) <- dimnames(out$qab) <- list(raterNames,raterNames,itemNames,itemNames)
+    dimnames(out$pab) <- dimnames(out$qab) <- list(raterNames,raterNames,score.labels,score.labels)
+    dimnames(out$pa) <- list(raterNames,score.labels,score.labels)
     rownames(out$data) <- itemNames
     colnames(out$data) <- rownames(out$kab) <- colnames(out$kab) <- rownames(out$varkab) <- colnames(out$varkab) <-
         rownames(out$var0kab) <- colnames(out$var0kab) <-
@@ -60,6 +61,8 @@ schouten <- function(X,weights=c("unweighted","linear","quadratic","user"),w=NUL
     out$p0a <- 2*pnorm(abs(out$ka/sqrt(out$var0ka)-1),lower.tail=FALSE)
     out$weights <- weights
     out$X <- X
+    out$raterNames <- raterNames
+    out$itemNames <- itemNames
     out$call <- sys.call()
     structure(out,class="schouten")
 }
@@ -100,11 +103,17 @@ print.schouten <- function(obj, ...) {
     invisible(obj)
 }
 
+.print.summary.schouten.ka <- function(obj) {
+    ka <- cbind(Kappa=obj$ka,`[Lower,`=obj$cia[,1],`Upper]`=obj$cia[,2],`Pr(kappa_av=kappa_rater)`=obj$pchi)
+    stats::printCoefmat(ka,eps.Pvalue=1e-5)
+    invisible(obj)
+}
 print.summary.schouten <- function(obj, ...) {
     print.schouten(obj,...)
+    cat("\nObserved marginal distributions for categories by observer:\n\n")
+    print(apply(obj$pa,1:2,sum))
     cat("\nAgreement statistics for each rater:\n\n")
-    ka <- cbind(Kappa=obj$ka,`[Lower,`=obj$cia[,1],`Upper]`=obj$cia[,2],`Pr(Different to average)`=obj$pchi)
-    stats::printCoefmat(ka,eps.Pvalue=1e-5)
+    .print.summary.schouten.ka(obj)
     invisible(obj)
 }
 
