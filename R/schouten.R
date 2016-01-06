@@ -57,7 +57,7 @@ schouten <- function(X,weights=c("unweighted","linear","quadratic","user"),w=NUL
             names(out$varka) <- names(out$var0ka) <- names(out$ka) <- raterNames
     ## colnames(out$p1) <- names(out$p2) <- colnames(out$w1) <- names(score) <- score.labels
     out$p0 <- 2*pnorm(abs(out$kappa/sqrt(out$var0k)-1),lower.tail=FALSE)
-    out$p0c <- 2*pnorm(abs(out$ka/sqrt(out$var0ka)-1),lower.tail=FALSE)
+    out$p0a <- 2*pnorm(abs(out$ka/sqrt(out$var0ka)-1),lower.tail=FALSE)
     out$weights <- weights
     out$X <- X
     out$call <- sys.call()
