@@ -1,0 +1,17 @@
+* R package for the O'Connell-Dobson-Schouten estimators of agreement for multiple observers.
+
+This short package provides fast estimation of the estimators of agreement for multiple observers. The data are assumed to include a matrix or data-frame with subjects as the rows and observers as the columns, with nominal or ordinal categories as the data. The methods are described by O'Connell and Dobson (Biometrics 1984; 40: 973-983) and Schouten (Statistica Neerlandica 1982: 36: 45-61). 
+
+There are several estimators of particular interest here:
+ + O'Connell-Dobson-Schouten estimator of average agreement across the observers.
+ + Average agreement by subject (O'Connell and Dobson 1984)
+ + Average agreement by observer (Schouten 1982)
+
+P-values compared with the null hypothesis (that is, H0: average agreement is zero) are available for these estimators. For the average agreement by observer, p-values are also available compared with the average agreement across observers.
+
+The summary methods describe a range of estimators, including confidence intervals. Several plots are available.
+
+The Fortran code from O'Connell and Dobson was provided by Professor O'Connell. The algorithms described by Schouten (1982) were implemented in Fortran 77.
+
+** TODO
+ + For the average agreement by subject, calculate p-values compared with the average agreement across subjects (which equals the average agreement across observers). This will require an estimate of the covariance between the average agreement across subjects and the average agreement by subject. As the code is so fast, it may be possible to calculate these values using the jackknife or similar approach.

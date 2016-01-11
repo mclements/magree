@@ -1,3 +1,44 @@
+magree <- function(X, weights=c("unweighted","linear","quadratic")) {
+    weights <- match.arg(weights)
+    structure(list(schouten = schouten(X,weights),
+                   oconnell = oconnell(X,weights)),
+              class="magree")
+}
+
+print.magree <- function(obj, ...)
+    print.oconnell(obj, ...)
+
+summary.magree <- function(obj, ...) {
+    structure(list(oconnell = summary(obj$oconnell),
+                   schouten = summary(obj$schouten)),
+              class="summary.magree")
+}
+
+print.summary.magree <- function(obj, ...) {
+    print.oconnell(obj$oconnell, ...)
+    cat("\nObserved marginal distributions for categories:\n\n")
+    print(obj$oconnell$p2)
+    cat("\nObserved marginal distributions for categories by observer:\n\n")
+    print(obj$oconnell$p1)
+    cat("\nAgreement statistics S_i for each subject:\n\n")
+    print(obj$oconnell$s1)
+    cat("\nAgreement statistics for each observer:\n\n")
+    .print.summary.schouten.ka(obj$schouten)
+    invisible(obj)
+}
+
+plot.magree <- function(obj, type=c("p1","kappa by observer"), xlab=NULL, ylab=NULL, main=NULL, ...) {
+    type <- match.arg(type)
+    if (type=="p1") {
+        if (is.null(xlab)) xlab <- "Observer"
+        if (is.null(ylab)) ylab <- "Probability"
+        if (is.null(main)) main <- ""
+        graphics:::plot.table(obj$oconnell$p1, xlab=xlab, ylab=ylab, main=main, ...)
+    }
+    if (type=="kappa by observer") plot.schouten(obj$schouten,xlab=xlab,ylab=ylab,main=main,...)
+}
+
+
 oconnell <- function(X,score=NULL, weights=c("unweighted","linear","quadratic"), i=NULL) {
     ## check arguments
     weights <- match.arg(weights)
@@ -55,7 +96,7 @@ summary.oconnell <- function(obj, ci.transform=c("logit","identity"), ci.p=0.95,
 print.oconnell <- function(obj, ...) {
     weight.labels <- c("unweighted","linear weights","quadratic weights")
     if (!inherits(obj,"summary.oconnell")) obj <- summary(obj,...)
-    cat(sprintf("O'Connell-Dobson estimator (%s)\n\nSav(hetero):\t%f (se: %f; 95%% CI: %f, %f)\nSav(homoge):\t%f (se: %f; 95%% CI: %f, %f)\n",
+    cat(sprintf("O'Connell-Dobson-Schouten estimator (%s)\n\nSav(hetero):\t%f (se: %f; 95%% CI: %f, %f)\nSav(homoge):\t%f (se: %f; 95%% CI: %f, %f)\n",
                 weight.labels[obj$i],
                 obj$sav1,
                 sqrt(obj$vsav1),
@@ -79,20 +120,19 @@ print.summary.oconnell <- function(obj, ...) {
     print(obj$p2)
     cat("\nObserved marginal distributions for categories by observer:\n\n")
     print(obj$p1)
-    cat("\nAgreement statistics S_i for the individual items:\n\n")
+    cat("\nAgreement statistics S_i for each subject:\n\n")
     print(obj$s1)
-    ## cat("\nAgreement statistics for each rater:\n\n")
+    ## cat("\nAgreement statistics for each observer:\n\n")
     ## .print.summary.schouten.ka(summary(obj$schouten))
     invisible(obj)
 }
 
-plot.oconnell <- function(obj, type=c("p1","kappa by rater"), xlab=NULL, ylab=NULL, main=NULL, ...) {
+plot.oconnell <- function(obj, type=c("p1"), xlab=NULL, ylab=NULL, main=NULL, ...) {
     type <- match.arg(type)
     if (type=="p1") {
-        if (is.null(xlab)) xlab <- "Rater"
+        if (is.null(xlab)) xlab <- "Observer"
         if (is.null(ylab)) ylab <- "Probability"
         if (is.null(main)) main <- ""
         graphics:::plot.table(obj$p1, xlab=xlab, ylab=ylab, main=main, ...)
     }
-    ## if (type=="kappa by rater") plot.schouten(obj$schouten,xlab=xlab,ylab=ylab,main=main,...)
 }

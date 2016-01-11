@@ -91,7 +91,7 @@ print.schouten <- function(obj, ...) {
                             quadratic="quadratic weights",
                             user="user-defined weights")
     if (!inherits(obj,"summary.schouten")) obj <- summary(obj,...)
-    cat(sprintf("Schouten estimator (%s)\n\nAverage kappa:\t%f (se: %f; 95%% CI: %f, %f)\n",
+    cat(sprintf("O'Connell-Dobson-Schouten estimator (%s)\n\nAverage kappa:\t%f (se: %f; 95%% CI: %f, %f)\n",
                 weight.labels,
                 obj$kappa,
                 sqrt(obj$vark),
@@ -104,7 +104,7 @@ print.schouten <- function(obj, ...) {
 }
 
 .print.summary.schouten.ka <- function(obj) {
-    ka <- cbind(Kappa=obj$ka,`[Lower,`=obj$cia[,1],`Upper]`=obj$cia[,2],`Pr(kappa_av=kappa_rater)`=obj$pchi)
+    ka <- cbind(Kappa=obj$ka,`[Lower,`=obj$cia[,1],`Upper]`=obj$cia[,2],`Pr(kappa_av=kappa_observer)`=obj$pchi)
     stats::printCoefmat(ka,eps.Pvalue=1e-5)
     invisible(obj)
 }
@@ -112,23 +112,23 @@ print.summary.schouten <- function(obj, ...) {
     print.schouten(obj,...)
     cat("\nObserved marginal distributions for categories by observer:\n\n")
     print(apply(obj$pa,1:2,sum))
-    cat("\nAgreement statistics for each rater:\n\n")
+    cat("\nAgreement statistics for each observer:\n\n")
     .print.summary.schouten.ka(obj)
     invisible(obj)
 }
 
-plot.schouten <- function(obj, type=c("kappa by rater"), xlab=NULL, ylab=NULL, main=NULL, xdelta=0.1, axes=TRUE, ...) {
+plot.schouten <- function(obj, type=c("kappa by observer"), xlab=NULL, ylab=NULL, main=NULL, xdelta=0.1, axes=TRUE, ...) {
     type <- match.arg(type)
     ## if (type=="p1") {
-    ##     if (is.null(xlab)) xlab <- "Rater"
+    ##     if (is.null(xlab)) xlab <- "Observer"
     ##     if (is.null(ylab)) ylab <- "Probability"
     ##     if (is.null(main)) main <- ""
     ##     graphics:::plot.table(obj$p1, xlab=xlab, ylab=ylab, main=main, ...)
     ## }
-    if (type=="kappa by rater") {
+    if (type=="kappa by observer") {
         su <- summary(obj)
         M <- length(obj$ka)
-        if (is.null(xlab)) xlab <- "Rater"
+        if (is.null(xlab)) xlab <- "Observer"
         if (is.null(ylab)) ylab <- "Kappa"
         matplot(su$cia,type="n",ylab=ylab,xlab=xlab,axes=FALSE,...)
         if (axes) {
