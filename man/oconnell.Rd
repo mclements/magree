@@ -2,7 +2,7 @@
 \alias{oconnell}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-O'Connell-Dobson estimator for multirater agreement.
+O'Connell-Dobson estimators for multiobserver agreement.
 }
 \description{
   Use the O'Connell-Dobson estimator of agreement for nominal or ordinal
@@ -10,26 +10,22 @@ O'Connell-Dobson estimator for multirater agreement.
   either distinct or homogeneous items. 
 }
 \usage{
-oconnell(X, score = NULL, weights=c("unweighted","linear","quadratic"), i=NULL)
+oconnell(X, weights=c("unweighted","linear","quadratic"), i=NULL, score = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{
-A matrix or data-frame with observations/subjects as rows and raters as columns.
-}
-  \item{score}{
-    The scores that are to be assigned to the categories. Currently,
-    this defaults to a sorted list of the unique values.
+A matrix or data-frame with observations/subjects as rows and observers as columns.
 }
 \item{weights}{
   \describe{
     \item{"unweighted"}{For nominal categories - only perfect agreement is counted.}
     \item{"linear"}{For ordinal categories where disagreement is proportional to
       the distance between the categories. This is analogous to the
-      agreement weights \eqn{w_{i,j}=1-|i-j|/(c-1)}.}
+      agreement weights \eqn{w_{i,j}=1-|score[i]-score[j]|/(max(score)-min(score))}.}
     \item{"quadratic"}{For ordinal categories where disagreement is proportional to
       the square of the distance between the categories. This is analogous
-      to the agreement weights \eqn{w_{i,j}=1-(i-j)^2/(c-1)^2}.}
+      to the agreement weights \eqn{w_{i,j}=1-(score[i]-score[j])^2/(max(score)-min(score))^2}.}
   }
 }
 \item{i}{
@@ -37,19 +33,24 @@ A matrix or data-frame with observations/subjects as rows and raters as columns.
     \item{For nominal categories - only perfect agreement is counted.}
     \item{For ordinal categories where disagreement is proportional to
       the distance between the categories. This is analogous to the
-      agreement weights \eqn{w_{i,j}=1-|i-j|/(c-1)}.}
+      agreement weights \eqn{w_{i,j}=1-|score[i]-score[j]|/(max(score)-min(score))}.}
     \item{For ordinal categories where disagreement is proportional to
       the square of the distance between the categories. This is analogous
-      to the agreement weights \eqn{w_{i,j}=1-(i-j)^2/(c-1)^2}.}
+      to the agreement weights \eqn{w_{i,j}=1-(score[i]-score[j])^2/(max(score)-min(score))^2}.}
   }
   This argument takes precedence over \code{weights} if it is specified.
+}
+  \item{score}{
+    The scores that are to be assigned to the categories. Currently,
+    this defaults to \code{1:L}, where code{L} is the number of categories.
 }
 }
 \details{
   The Fortran code from Professor Dianne O'Connell was adapted for R. 
   
   The output object is very similar to the Fortan code. Not
-  all of the variance terms are currently used in the \code{print} and \code{summary} methods.
+  all of the variance terms are currently used in the \code{print},
+  \code{summary} and \code{plot} methods.
 }
 \value{
 %%  ~Describe the value returned
@@ -58,7 +59,7 @@ A matrix or data-frame with observations/subjects as rows and raters as columns.
 \item{i}{As input}
 \item{nrater}{Number of observers}
 \item{nscore}{Number of categories}
-\item{nsubj}{Number of subjects (items)}
+\item{nsubj}{Number of subjects}
 \item{p1[j,k]}{Probability of observer j giving score k when observers
   are distinct}
 \item{p2[k]}{Probability of score k when observers are homogeneous}
@@ -110,9 +111,9 @@ observers are distinct}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-%}
+\seealso{
+\code{\link{magree}}, \code{\link{schouten}}.
+}
 \examples{
 
 ## Table 1 (O'Connell and Dobson, 1984)
@@ -154,7 +155,7 @@ oconnell(landis==4)
 oconnell(landis==5)
 
 ## Plot of the marginal distributions
-graphics:::plot.table(fit$p1, xlab="Pathologist", ylab="Marginal proportion", main="")
+plot(fit)
 }
 %% ds <- transform(data.frame(id=rownames(landis),
 %%                            d1=oconnell(landis,i=1)$s2,
@@ -166,5 +167,5 @@ graphics:::plot.table(fit$p1, xlab="Pathologist", ylab="Marginal proportion", ma
 %%
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-%\keyword{ ~kwd1 }
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ Agreement }
+\keyword{ Kappa }

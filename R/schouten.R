@@ -1,4 +1,4 @@
-schouten <- function(X,weights=c("unweighted","linear","quadratic","user"),w=NULL) {
+schouten <- function(X,weights=c("unweighted","linear","quadratic","user"),w=NULL,score=NULL) {
     stopifnot(inherits(X,"data.frame") || inherits(X,"matrix"))
     stopifnot(ncol(X)>1 && nrow(X)>1)
     N <- nrow(X)
@@ -9,12 +9,14 @@ schouten <- function(X,weights=c("unweighted","linear","quadratic","user"),w=NUL
         stop("NAs in matrix: missing values or columns of different types?")
     score.labels <- sort(unique(as.vector(matX)))
     L <- length(unique(unlist(as.vector(matX))))
+    if (is.null(score)) score <- 1:L
     if (is.null(w)) {
         weights <- match.arg(weights)
-        w <- switch(weights,
-                    unweighted=diag(L),
-                    linear=outer(1:L,1:L,function(x,y) 1.0-abs(x-y)/(L-1)),
-                    quadratic=outer(1:L,1:L,function(x,y) 1.0-(x-y)^2/(L-1)^2))
+        w <- outer(score,score,
+                   switch(weights,
+                    unweighted=function(x,y) (x==y)+0,
+                    linear=function(x,y) 1.0-abs(x-y)/(max(x)-min(x)),
+                    quadratic=function(x,y) 1.0-(x-y)^2/(max(x)-min(x))^2))
     } else weights <- "user"
     data2 <- matrix(as.integer(as.factor(matX)),N,M)
     raterNames <- colnames(X)

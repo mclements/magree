@@ -14,4 +14,6 @@ The summary methods describe a range of estimators, including confidence interva
 The Fortran code from O'Connell and Dobson was provided by Professor O'Connell. The algorithms described by Schouten (1982) were implemented in Fortran 77.
 
 ** TODO
- + For the average agreement by subject, calculate p-values compared with the average agreement across subjects (which equals the average agreement across observers). This will require an estimate of the covariance between the average agreement across subjects and the average agreement by subject. As the code is so fast, it may be possible to calculate these values using the jackknife or similar approach.
+     + For the average agreement by subject, calculate p-values compared with the average agreement across subjects (which equals the average agreement across observers). This will require an estimate of the covariance between the average agreement across subjects and the average agreement by subject. As the code is so fast, it may be possible to calculate these values using the jackknife or similar approach.
+     + Better describe the difference between the estimators that assume homogeneity and those that assume heterogeneity.
+     + Extend the O'Connell-Dobson estimators to include an arbitrary weight matrix.

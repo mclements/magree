@@ -1,12 +1,13 @@
-magree <- function(X, weights=c("unweighted","linear","quadratic")) {
+magree <- function(X, weights=c("unweighted","linear","quadratic"), score=NULL) {
     weights <- match.arg(weights)
-    structure(list(schouten = schouten(X,weights),
-                   oconnell = oconnell(X,weights)),
+    structure(list(oconnell = magree::oconnell(X,weights,score=score),
+                   schouten = magree::schouten(X,weights,score=score),
+                   call = sys.call()),
               class="magree")
 }
 
 print.magree <- function(obj, ...)
-    print.oconnell(obj, ...)
+    print.oconnell(obj$oconnell, ...)
 
 summary.magree <- function(obj, ...) {
     structure(list(oconnell = summary(obj$oconnell),
@@ -39,7 +40,7 @@ plot.magree <- function(obj, type=c("p1","kappa by observer"), xlab=NULL, ylab=N
 }
 
 
-oconnell <- function(X,score=NULL, weights=c("unweighted","linear","quadratic"), i=NULL) {
+oconnell <- function(X, weights=c("unweighted","linear","quadratic"), i=NULL, score=NULL) {
     ## check arguments
     weights <- match.arg(weights)
     stopifnot(inherits(X,"data.frame") || inherits(X,"matrix"))
@@ -52,6 +53,7 @@ oconnell <- function(X,score=NULL, weights=c("unweighted","linear","quadratic"),
         stop("NAs in matrix: missing values or columns of different types?")
     score.labels <- sort(unique(as.vector(matX)))
     if (is.null(score)) score <- as.numeric(score.labels)
+    names(score) <- score.labels
     if (any(is.na(score)))
         stop("Missing or non-numeric scores. Possibly specify the score argument")
     nrater <- ncol(X); nsubj <- nrow(X)
@@ -73,6 +75,7 @@ oconnell <- function(X,score=NULL, weights=c("unweighted","linear","quadratic"),
     out$p0sav1 <- 2*pnorm(abs(out$sav1/sqrt(out$v0sav1)-1),lower.tail=FALSE)
     out$p0sav2 <- 2*pnorm(abs(out$sav2/sqrt(out$v0sav2)-1),lower.tail=FALSE)
     out$X <- X
+    out$score <- score
     ## out$schouten <- schouten(X,weights)
     out$call <- sys.call()
     class(out) <- "oconnell"
