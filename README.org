@@ -1,3 +1,5 @@
+#+OPTIONS: toc:nil
+
 # Babel settings
 #+PROPERTY: session *R* 
 #+PROPERTY: cache yes 
@@ -20,6 +22,12 @@ The summary methods describe a range of estimators, including confidence interva
 
 The Fortran code from O'Connell and Dobson was provided by Professor O'Connell. The algorithms described by Schouten (1982) were implemented in Fortran 77.
 
+** Examples
+
+Both O'Connell and Dobson (1984) and Schouten (1982) use the data from Landis and Koch (Biometrics 1977; 33: 363-374). The data are included as the =landis= dataset in the R package.
+
+A simple description of the average agreement across the observers is given by printing the =magree= object:
+
 #+begin_src R
   require(magree)
   magree(landis)
@@ -33,6 +41,7 @@ The Fortran code from O'Connell and Dobson was provided by Professor O'Connell. 
 : Pr(Overall agreement due to chance | hetero):	< 2.22e-16
 : Pr(Overall agreement due to chance | homoge):	< 2.22e-16
 
+We can obtain considerably more information from the summary of the =magree= object:
 
 #+begin_src R
   summary(magree(landis))
@@ -120,12 +129,16 @@ G 0.46538 0.40385 0.5280                     < 1e-05 ***
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #+end_example
 
+There are currently two plot types: the default =type= = "p1" gives a tabular plot for the marginal probabilities of each category by observed:
+
 #+begin_src R :file ./inst/img/p1.png :results output
   plot(magree(landis))
 #+end_src
 
 #+RESULTS[ac7ce3b55597642e6c75f253cad009bda11d8338]:
 [[file:./inst/img/p1.png]]
+
+The second plot is =type= = "kappa by observer", which shows the estimated average kappa by observer with intervals based on /single standard errors/:
 
 #+begin_src R :file ./inst/img/kappa_by_observer.png :results output
   plot(magree(landis),type="kappa by observer")
@@ -137,6 +150,6 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 
 ** To-do:
-     + For the average agreement by subject, calculate p-values compared with the average agreement across subjects (which equals the average agreement across observers). This will require an estimate of the covariance between the average agreement across subjects and the average agreement by subject. As the code is so fast, it may be possible to calculate these values using the jackknife or similar approach.
      + Better describe the difference between the estimators that assume homogeneity and those that assume heterogeneity.
+     + For the average agreement by subject, calculate p-values compared with the average agreement across subjects (which equals the average agreement across observers). This will require an estimate of the covariance between the average agreement across subjects and the average agreement by subject. As the code is so fast, it may be possible to calculate these values using the jackknife or similar approach.
      + Extend the O'Connell-Dobson estimators to include an arbitrary weight matrix.

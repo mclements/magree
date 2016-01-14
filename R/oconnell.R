@@ -30,13 +30,10 @@ print.summary.magree <- function(obj, ...) {
 
 plot.magree <- function(obj, type=c("p1","kappa by observer"), xlab=NULL, ylab=NULL, main=NULL, ...) {
     type <- match.arg(type)
-    if (type=="p1") {
-        if (is.null(xlab)) xlab <- "Observer"
-        if (is.null(ylab)) ylab <- "Probability"
-        if (is.null(main)) main <- ""
-        graphics:::plot.table(obj$oconnell$p1, xlab=xlab, ylab=ylab, main=main, ...)
-    }
-    if (type=="kappa by observer") plot.schouten(obj$schouten,xlab=xlab,ylab=ylab,main=main,...)
+    if (type=="p1") 
+        plot.oconnell(obj, xlab=xlab, ylab=ylab, main=main, ...)
+    if (type=="kappa by observer")
+        plot.schouten(obj$schouten,xlab=xlab,ylab=ylab,main=main,...)
 }
 
 
