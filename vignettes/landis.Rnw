@@ -1,6 +1,6 @@
 %\VignetteIndexEntry{O'Connell-Dobson estimators of agreement applied to data from Landis and Koch (1976)}
-%\VignetteDepends{oconnell}
-%\VignettePackage{oconnell}
+%\VignetteDepends{magree}
+%\VignettePackage{magree}
 %!\SweaveUTF8
 
 \documentclass[nojss]{jss}
@@ -42,7 +42,7 @@ After loading the package, we can produce summary statistics for \code{i=1}, whi
 
 %<<fig=TRUE>>=
 <<>>=
-require(oconnell)
+require(magree)
 ## Table 1 (O'Connell and Dobson, 1984)
 summary(fit <- oconnell(landis, weight="unweighted"))
 @ 
@@ -50,7 +50,6 @@ summary(fit <- oconnell(landis, weight="unweighted"))
 A simple print of the object provides a short description of the estimator. This is shown here for the linear and quadratic weights.
 
 <<>>=
-require(oconnell)
 ## Table 1 (O'Connell and Dobson, 1984), continued
 print(update(fit, weight="linear"))
 print(update(fit, weight="quadratic"))

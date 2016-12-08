@@ -1,11 +1,11 @@
 Package: magree
 Type: Package
-Title: Implements the O'Connell-Dobson-Schouten estimators of agreement for multiple obervers. Includes estimates of average agreement for each observer and average agreement for each subject.
+Title: Implements the O'Connell-Dobson-Schouten Estimators of Agreement for Multiple Obervers
 Version: 1.0
-Date: 2015-12-20
-Imports: graphics
+Date: 2016-12-08
+Depends: graphics
 Author: Mark Clements, Dianne O'Connell
 Maintainer: Mark Clements <mark.clements@ki.se>
-Description: Implements an interface to the legacy Fortran code from O'Connell and Dobson (Biometrics 1984; 40: 973-983). Implements Fortran 77 code for the methods developed by Schouten (Statistica Neerlandica 1982: 36: 45-61). 
-License: GPL-3 or later.
+Description: Implements an interface to the legacy Fortran code from O'Connell and Dobson (Biometrics 1984; 40: 973-983). Implements Fortran 77 code for the methods developed by Schouten (Statistica Neerlandica 1982: 36: 45-61). Includes estimates of average agreement for each observer and average agreement for each subject.
+License: GPL-3 | GPL-2
 LazyData: yes

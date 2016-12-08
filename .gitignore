@@ -1,0 +1,10 @@
+*~
+*.so
+*.dll
+*.o
+*.aux
+*.out
+*.log
+auto
+landis-001.pdf
+landis.tex

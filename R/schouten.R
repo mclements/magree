@@ -70,7 +70,7 @@ schouten <- function(X,weights=c("unweighted","linear","quadratic","user"),w=NUL
 }
 
 
-summary.schouten <- function(obj, ci.transform=c("logit","identity"), ci.p=0.95, ...) {
+summary.schouten <- function(object, ci.transform=c("logit","identity"), ci.p=0.95, ...) {
     ci.transform <- match.arg(ci.transform)
     expit <- function(x) 1/(1+exp(-x))
     logit <- function(x) log(x/(1-x))
@@ -79,62 +79,62 @@ summary.schouten <- function(obj, ci.transform=c("logit","identity"), ci.p=0.95,
                      identity=function(mean,se) mean+qnorm(c(alpha/2,1-alpha/2))*se,
                      logit=function(mean,se)
                      expit(logit(mean)+qnorm(c(alpha/2,1-alpha/2))*se/mean/(1-mean)))
-    obj$ci <- transf(obj$kappa,sqrt(obj$vark))
-    obj$cia <- t(mapply(transf,obj$ka,sqrt(obj$varka)))
-    rownames(obj$cia) <- names(obj$ka)
-    ## obj$ciab <- mapply(transf,obj$kab,sqrt(obj$varkab))
-    structure(obj, class="summary.schouten")
+    object$ci <- transf(object$kappa,sqrt(object$vark))
+    object$cia <- t(mapply(transf,object$ka,sqrt(object$varka)))
+    rownames(object$cia) <- names(object$ka)
+    ## object$ciab <- mapply(transf,object$kab,sqrt(object$varkab))
+    structure(object, class="summary.schouten")
 }
 
-print.schouten <- function(obj, ...) {
-    weight.labels <- switch(obj$weights,
+print.schouten <- function(x, ...) {
+    weight.labels <- switch(x$weights,
                             unweighted="unweighted",
                             linear="linear weights",
                             quadratic="quadratic weights",
                             user="user-defined weights")
-    if (!inherits(obj,"summary.schouten")) obj <- summary(obj,...)
+    if (!inherits(x,"summary.schouten")) x <- summary(x,...)
     cat(sprintf("O'Connell-Dobson-Schouten estimator (%s)\n\nAverage kappa:\t%f (se: %f; 95%% CI: %f, %f)\n",
                 weight.labels,
-                obj$kappa,
-                sqrt(obj$vark),
-                obj$ci[1],
-                obj$ci[2],
+                x$kappa,
+                sqrt(x$vark),
+                x$ci[1],
+                x$ci[2],
                 ...))
     cat(sprintf("Pr(Overall agreement due to chance):\t%s\n",
-                format.pval(obj$p0), ...))
-    invisible(obj)
+                format.pval(x$p0), ...))
+    invisible(x)
 }
 
-.print.summary.schouten.ka <- function(obj) {
-    ka <- cbind(Kappa=obj$ka,`[Lower,`=obj$cia[,1],`Upper]`=obj$cia[,2],`Pr(kappa_av=kappa_observer)`=obj$pchi)
+.print.summary.schouten.ka <- function(x) {
+    ka <- cbind(Kappa=x$ka,`[Lower,`=x$cia[,1],`Upper]`=x$cia[,2],`Pr(kappa_av=kappa_observer)`=x$pchi)
     stats::printCoefmat(ka,eps.Pvalue=1e-5)
-    invisible(obj)
+    invisible(x)
 }
-print.summary.schouten <- function(obj, ...) {
-    print.schouten(obj,...)
+print.summary.schouten <- function(x, ...) {
+    print.schouten(x,...)
     cat("\nObserved marginal distributions for categories by observer:\n\n")
-    print(apply(obj$pa,1:2,sum))
+    print(apply(x$pa,1:2,sum))
     cat("\nAgreement statistics for each observer:\n\n")
-    .print.summary.schouten.ka(obj)
-    invisible(obj)
+    .print.summary.schouten.ka(x)
+    invisible(x)
 }
 
-plot.schouten <- function(obj, type=c("kappa by observer"), xlab=NULL, ylab=NULL, main=NULL, xdelta=0.1, axes=TRUE, ...) {
+plot.schouten <- function(x, type=c("kappa by observer"), xlab=NULL, ylab=NULL, main=NULL, xdelta=0.1, axes=TRUE, ...) {
     type <- match.arg(type)
     ## if (type=="p1") {
     ##     if (is.null(xlab)) xlab <- "Observer"
     ##     if (is.null(ylab)) ylab <- "Probability"
     ##     if (is.null(main)) main <- ""
-    ##     graphics:::plot.table(obj$p1, xlab=xlab, ylab=ylab, main=main, ...)
+    ##     graphics:::plot.table(x$p1, xlab=xlab, ylab=ylab, main=main, ...)
     ## }
     if (type=="kappa by observer") {
-        su <- summary(obj)
-        M <- length(obj$ka)
+        su <- summary(x)
+        M <- length(x$ka)
         if (is.null(xlab)) xlab <- "Observer"
         if (is.null(ylab)) ylab <- "Kappa"
         matplot(su$cia,type="n",ylab=ylab,xlab=xlab,axes=FALSE,...)
         if (axes) {
-            axis(1,at=1:M,labels=names(obj$ka))
+            axis(1,at=1:M,labels=names(x$ka))
             axis(2)
             box()
         }
