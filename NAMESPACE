@@ -1,2 +1,2 @@
-useDynLib("oconnell")
+useDynLib("magree")
 exportPattern("^[[:alpha:]]+")

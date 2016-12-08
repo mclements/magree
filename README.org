@@ -1,4 +1,8 @@
+#+TITLE: R package for the O'Connell-Dobson-Schouten estimators of agreement for multiple observers.
+
 #+OPTIONS: toc:nil
+#+OPTIONS: num:nil
+#+OPTIONS: html-postamble:nil
 
 # Babel settings
 #+PROPERTY: session *R* 
@@ -7,7 +11,6 @@
 #+PROPERTY: exports both 
 #+PROPERTY: tangle yes 
 
-* R package for the O'Connell-Dobson-Schouten estimators of agreement for multiple observers.
 
 This short package provides fast estimation of the estimators of agreement for multiple observers. The data are assumed to include a matrix or data-frame with subjects as the rows and observers as the columns, with nominal or ordinal categories as the data. The methods are described by O'Connell and Dobson (Biometrics 1984; 40: 973-983) and Schouten (Statistica Neerlandica 1982: 36: 45-61). 
 
