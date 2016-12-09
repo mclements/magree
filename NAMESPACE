@@ -1,8 +1,10 @@
 useDynLib("magree")
 exportPattern("^[[:alpha:]]+")
 ## export(magree,oconnell,schouten)
-importFrom(graphics,plot)
 exportMethods(plot,summary,print)
+
+importFrom("graphics", "axis", "box", "matplot", "points", "segments", "plot")
+importFrom("stats", "pchisq", "pnorm", "qnorm")
 
 S3method(print,magree)
 S3method(print,oconnell)
